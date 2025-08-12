@@ -1,0 +1,453 @@
+@font-face {
+    font-family: "Ample Soft Pro Bold";
+    src: local("Ample Soft Pro Bold"), local("Ample-Soft-Pro-Bold"),
+        url("../fonts/AmpleSoftPro-Bold.woff2") format("woff2"),
+        url("../fonts/AmpleSoftPro-Bold.woff") format("woff"),
+        url("../fonts/AmpleSoftPro-Bold.ttf") format("truetype");
+    font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Ample Soft Pro Regular";
+    src: local("Ample Soft Pro Regular"), local("Ample-Soft-Pro-Regular"),
+        url("../fonts/AmpleSoftPro-Regular.ttf") format("truetype");
+    font-weight: 600;
+    font-style: normal;
+}
+
+:root {
+    --color1: #F9B139;
+    font-size: 62.5%;
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+img:not(img[title]) {
+    pointer-events: none;
+}
+
+img {
+    object-fit: contain;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border: none;
+    outline: none;
+    box-sizing: border-box;
+    resize: none;
+    user-select: none;
+
+    color: #ffffff;
+    text-shadow: none;
+
+    font-family: 'Hero New', sans-serif !important;
+    -webkit-font-smoothing: antialiased;
+}
+
+button,
+[type="button"],
+.fullCenter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.textScroll {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+body,
+#root {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+}
+
+#root {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-end;
+    position: relative;
+}
+
+#root #logo {
+    position: absolute;
+    top: 0.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 18rem;
+    height: 18rem;
+}
+
+#root main {
+    width: fit-content;
+    height: 200vh;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: space-between;
+    position: relative;
+    padding: 5rem;
+}
+
+#root main>header#header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: .7rem;
+
+    width: 100%;
+    height: 3rem;
+}
+
+#root main>header#header .col {
+    display: inline-flex;
+    align-items: center;
+    gap: 1.4rem;
+    text-shadow: 1px 1px #000;
+    background: linear-gradient(0deg, rgba(255, 255, 255, 0.09) 0%, rgba(255, 255, 255, 0.0053) 100%);
+    border: 0.05vw solid rgba(255, 255, 255, 0.03);
+}
+
+#root main>header#header .col.stars {
+    gap: .5rem;
+}
+
+#root main>header#header .col #hour {
+    text-shadow: 1px 1px #000;
+    color: #FFF;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+#root main>header#header .col>div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: .5rem;
+}
+
+#root main>header#header .col>div img {
+    width: 2rem;
+    height: 2rem;
+}
+
+#root main>header#header .col>div span {
+    height: 1.7rem;
+    border-radius: 0.2rem;
+    background: rgba(114, 112, 112, 0.30);
+
+    padding-inline: 1.2rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #FFF;
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+
+#root main>header#header .col .column {
+    flex-direction: column;
+    gap: 0;
+    align-items: flex-start;
+}
+
+#root main>header#header .col .column h2 {
+    text-shadow: 1px 1px #000;
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+#root main>header#header .col .column p {
+    color: #727070;
+    font-size: 0.7rem;
+    font-weight: 400;
+}
+
+#root main>#playerInfos {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: .7rem;
+
+    height: 3.4rem;
+    zoom: 1.5;
+}
+
+#root main>#playerInfos div {
+    width: 3.4rem;
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    position: relative;
+
+    border-radius: 40rem;
+    background: radial-gradient(2rem, rgba(3, 3, 3, 0.60), transparent);
+    overflow: hidden;
+}
+
+#root main>#playerInfos div svg {
+    position: absolute;
+    top: -1.85rem;
+    left: 51.42%;
+    width: 3.5rem;
+    height: 3.5rem;
+    transform: rotate(270deg) translate(-50%, -50%);
+}
+
+#root main>#playerInfos div svg circle {
+    cx: 17;
+    cy: 17;
+    fill: none;
+    stroke-width: .3rem;
+    transition: all .3s ease;
+    stroke-dasharray: 440;
+    stroke-dashoffset: 0;
+}
+
+#root main>#playerInfos div.hunger svg circle#hungerValue {
+    stroke-dashoffset: 440;
+    stroke: #FAB94C;
+}
+
+#root main>#playerInfos div.thirst svg circle#thirstValue {
+    stroke-dashoffset: 440;
+    stroke: #48DEFF;
+}
+
+#root main>#playerInfos div.heart svg circle#heartValue {
+    stroke-dashoffset: 440;
+    stroke: #FC2F2F;
+}
+
+#root main>#playerInfos div.armour svg circle#armourValue {
+    stroke-dashoffset: 440;
+    stroke: #48A7FF;
+}
+
+#root main>#playerInfos div.stress svg circle#stressValue {
+    stroke-dashoffset: 440;
+    stroke: #fccad5;
+}
+
+#root main>#playerInfos div img {
+    width: 3.5rem;
+    height: 3.5rem;
+    position: relative;
+    top: -.05rem;
+}
+
+#root main>section #mic {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .1rem;
+
+    width: 1.6rem;
+}
+
+#root main>section #mic img {
+    height: 2.4rem;
+}
+
+#root main>section #mic div {
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    gap: .1rem;
+
+    width: 100%;
+    height: 3.5rem;
+}
+
+#root main>section #mic div span.playerMic {
+    width: 100%;
+    height: calc(100% / 3);
+
+    background: #1B1B1B;
+    border-radius: .2rem;
+}
+
+#root main>section #mic div span.playerMic.active {
+    background: var(--color1);
+
+    transition: .3s ease;
+}
+
+#root main>#vehicleContainer {
+    position: absolute;
+    bottom: 14rem;
+    right: 4.8rem;
+    zoom: 0.8;
+    height: 20.3rem;
+
+    display: flex;
+    align-items: flex-end;
+
+    opacity: 0;
+    transition: all .4s ease;
+}
+
+#root main>#vehicleContainer #fuel {
+    width: 2.293rem;
+    height: 13.1391rem;
+
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+}
+
+#root main>#vehicleContainer #fuel div {
+    width: 100%;
+    height: 100%;
+
+    position: relative;
+    zoom: 0.95;
+    top: .4rem;
+    right: -0.5rem;
+}
+
+#root main>#vehicleContainer #fuel div #fuelContainer {
+    z-index: 1;
+}
+
+#root main>#vehicleContainer #fuel div .fuelBg {
+    position: absolute;
+}
+
+#root main>#vehicleContainer #fuel img#icon {
+    width: 1.142rem;
+    height: 1.142rem;
+
+    position: absolute;
+    bottom: 0;
+    right: -.8rem;
+}
+
+#root main>#vehicleContainer #velocimeter {
+    width: 27.8rem;
+    height: 100%;
+
+    position: relative;
+    overflow: hidden;
+}
+
+#root main>#vehicleContainer #velocimeter svg {
+    pointer-events: none;
+}
+
+#root main>#vehicleContainer #velocimeter #velocimeterBg {
+    position: absolute;
+    left: 47%;
+    top: 100%;
+    transform: translate(-47%, -100%);
+    zoom: 0.95;
+}
+
+#root main>#vehicleContainer .centerInfos {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translate(-50%, -100%);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+#root main>#vehicleContainer .centerInfos #kmValue,
+#root main>#vehicleContainer .centerInfos #kmValue * {
+    color: #3F3F3F;
+    font-size: 5rem;
+    font-weight: 700;
+    line-height: 110%;
+}
+
+#root main>#vehicleContainer .centerInfos #kmValue {
+    color: #fff;
+}
+
+#root main>#vehicleContainer .centerInfos p {
+    color: #3F3F3F;
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 10%;
+}
+
+#root main>#vehicleContainer .centerInfos .row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.2rem;
+    margin-top: 1.5rem;
+}
+
+#root main>#vehicleContainer .centerInfos .row img {
+    opacity: .4;
+    transition: all .4s ease;
+}
+
+#root main>#vehicleContainer .centerInfos .row img.active {
+    opacity: 1;
+}
+
+#root main>#vehicleContainer .centerInfos .row img.green {
+    filter: grayscale(66%) sepia(1) hue-rotate(76deg) saturate(74);
+}
+
+#root main>#vehicleContainer .centerInfos .row img.yellow {
+    filter: grayscale(66%) sepia(1) saturate(69);
+}
+
+#root main>#vehicleContainer .centerInfos .row img.red {
+    filter: sepia(1) hue-rotate(-66deg) saturate(245);
+}
+
+@media (max-height: 769px) {
+    #root main,
+    #root #logo {
+        zoom: 0.7;
+    }
+}
+
+@media (max-width: 1366px) {
+
+    #root main,
+    #root #logo {
+        zoom: 0.8;
+    }
+}
+
+@media (max-width: 1101px) {
+
+    #root main,
+    #root #logo {
+        zoom: 0.9;
+    }
+}
+
+@media (max-width: 900px) {
+    #root main,
+    #root #logo {
+        zoom: 1.0;
+    }
+}

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+    <head>
+      <link rel="stylesheet" href="./assets/index.4d77f53b.css">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400&display=swap" rel="stylesheet"/>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.29/vue.global.prod.js"></script>
+    </head>
+    <body>
+        <div id="mainContainer">
+            <audio id="sounds"><source type="audio/ogg"></audio>
+            <div id="doorlock-container" :class="doorlockClassObject" :style="doorlockStyleObject">{{ doorText }}</div>
+            <div class="textInfo">
+                <p id="aim" style="display: none;">Aim at your desired door.<br>Press the left mouse button to confirm the selected door</p>
+            </div>
+        </div>
+        <script type="module" crossorigin src="./assets/index.dfa553ff.js"></script>
+    </body>
+</html>
