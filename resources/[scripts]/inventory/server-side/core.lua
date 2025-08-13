@@ -479,10 +479,12 @@ function Creative.Inventory()
 				elseif Split[1] == "creditcard" then
 					local Number = parseInt(Split[2])
 					local Identity = vRP.Identity(Number)
+					if not Identity then Identity = { name = 'teste', name2 = 'teste2' } end
 					v["desc"] = v["desc"].."<br><legenda>Nome: <r>"..(Identity["name"].." "..Identity["name2"]).."</r></legenda>"
 				elseif Split[1] == "debitcard"  then
 					local Number = parseInt(Split[2])
 					local Identity = vRP.Identity(Number)
+					if not Identity then Identity = { name = 'teste', name2 = 'teste2' } end
 					v["desc"] = v["desc"].."<br><legenda>Nome: <r>"..(Identity["name"].." "..Identity["name2"]).."</r></legenda>"
 				elseif Split[1] == "driverlicense" then
 					v["desc"] = v["desc"].."<br><legenda>Nome: <r>"..json.decode(Split[3])["name"].."</r> <br>Emissão: <r>"..os.date("%d/%m/%Y", json.decode(Split[3])["issued"]).."</r><br>Validity: <r>"..os.date("%d/%m/%Y", json.decode(Split[3])["expiration"]).."</r><br>Categoria: <r>"..string.gsub(json.encode(json.decode(Split[3])["categories"]), '[^%a,]', '').."</r></legenda>"
