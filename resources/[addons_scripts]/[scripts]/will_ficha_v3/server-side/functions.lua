@@ -9,93 +9,65 @@ vRPclient = Tunnel.getInterface("vRP")
 -----------------------------------
 
 function getUserId(source)
-    return vRP.getUserId(source)
+    return vRP.Passport(source)
 end
 
 function getUserSource(user_id)
-	if Config.base == "summerz" then
-		return vRP.userSource(user_id)
-	end
-	return vRP.getUserSource(user_id)
+	return vRP.Source(user_id)
 end
 
 function getUserIdentity(user_id)
-    if Config.base == "summerz" then
-		return vRP.userIdentity(user_id)
-	end
-	return vRP.getUserIdentity(user_id)
+	return vRP.Identity(user_id)
 end
 
 function hasPermission(user_id, perm)
-    if Config.base == "creative" or Config.base == "summerz" then
-        return vRP.hasPermission(user_id, perm)
-    elseif Config.base == "vrpex" then
-        if perm and perm:find('.permissao') then
-            return vRP.hasPermission(user_id, perm)
-        end
-        return vRP.hasGroup(user_id, perm)
-    end
+    return vRP.HasGroup(user_id, perm)
 end
 
 function addGroup(user_id, group)
-    if Config.base == "creative" and group then
-        vRP.insertPermission(user_id, group)
-        execute("vRP/add_group",{ user_id = user_id, permiss = group })
-    elseif Config.base == "vrpex" then
-        vRP.addUserGroup(user_id, group)
-    elseif Config.base == "summerz" then
-        vRP.setPermission(user_id, group)
-    end
+    vRP.SetPermission(user_id, group)
 end
 
 function removeGroup(user_id, group)
-    if Config.base == "creative" and group then
-        vRP.removePermission(user_id, group)
-	    execute("vRP/del_group",{ user_id = user_id, permiss = group })
-    elseif Config.base == "vrpex" then
-        vRP.removeUserGroup(user_id, group)
-    elseif Config.base == "summerz" then
-        vRP.remPermission(user_id,group)
-    end
+    vRP.RemovePermission(user_id,group)
 end
 
 function getUserPlate(plate)
-    local plateUser = nil
-    if Config.base == "creative" then
-		plateUser = vRP.getVehiclePlate(plate) or vRP.getUserIdRegistration(plate)
-	elseif Config.base == "vrpex" then
-		plateUser = vRP.getUserByRegistration(plate)
-    elseif Config.base == "summerz" then
-        plateUser = vRP.userPlate(plate)
-	end
-    return plateUser
+    local plateUser = vRP.PassportPlate(Plate)
+    return plateUser and plateUser.Passport
 end
 
 function getRegistration(user_id)
     local identity = getUserIdentity(user_id)
-    if Config.base == "summerz" then
-        return identity.serial
-    end
-    return identity.registration
+    return identity.serial
 end
 
 function vehicleName(vname)
-    return vRP.vehicleName(vname)
+    return vname
 end
 
 function getUserTax(user_id)
-    if Config.base == "creative" or Config.base == "summerz" then
-        return vRP.getFines(user_id)
-    else
-        return json.decode(vRP.getUData(parseInt(user_id),"vRP:multas")) or 0
+    -- if Config.base == "creative" or Config.base == "summerz" then
+    --     return vRP.getFines(user_id)
+    -- else
+    --     return json.decode(vRP.getUData(parseInt(user_id),"vRP:multas")) or 0
+    -- end
+    local fines = exports['bank']:Fines(user_id)
+    if fines then
+        local amount = 0
+        for k,v in pairs(fines) do
+            amount = amount + v.value
+        end
+        return amount
     end
+    return 0
 end
 
 function addUserTax(user_id, data)
 	local user = data.id
     local multa = parseInt(data.taxTotal)
     local multas = getUserTax(parseInt(user))
-    if Config.base == "creative" then
+  --[[   if Config.base == "creative" then
         execute("vRP/add_fines",{ user_id = user, nuser_id = user_id, date = os.date("%d.%m.%Y"), price = multa, text = json.encode(data.crimes) })
     elseif Config.base == "summerz" then
         vRP.addFines(user_id, parseInt(multas) + multa)
@@ -108,19 +80,15 @@ function addUserTax(user_id, data)
         else
             vRP.setUData(parseInt(user_id),"vRP:multas",json.encode(parseInt(multas)+multa))
         end
-    end
+    end ]]
+    exports['bank']:AddFines(user_id, user_id, multa, json.encode(data.crimes) )
 end
 
 function arrestPlayer(data)
 	local user_id = parseInt(data.id)
     local pena = parseInt(data.serviceTotal)
     local nplayer = getUserSource(user_id)
-    vRP.setUData(user_id,"vRP:prisao", pena)
-    if Config.base == "creative" then
-        execute("vRP/set_prison",{ user_id = user_id, prison = pena, locate = parseInt(0) })
-    elseif Config.base == "summerz" then
-        vRP.initPrison(user_id, pena)
-    end
+    vRP.InitPrison(user_id, pena)
     if nplayer then
         local ped = GetPlayerPed(nplayer)
         TriggerClientEvent('prisioneiro',nplayer,true)
@@ -134,16 +102,8 @@ end
 function reducePrison(source, time)
     local user_id = getUserId(source)
     local consult, tempo
-    if Config.base == "creative" then
-        consult = vRP.getInformation(user_id)
-        tempo = consult[1].prison
-    elseif Config.base == "summerz" then
-        consult = vRP.userIdentity(user_id).prison
-        tempo = parseInt(value) or 0
-    elseif Config.base == "vrpex" then
-        consult = vRP.getUData(parseInt(user_id),"vRP:prisao")
-        tempo = json.decode(consult) or -1
-    end
+    consult = vRP.Identity(user_id)
+    tempo = consult and consult.prison
     if parseInt(tempo) <= 0 then
         TriggerClientEvent('prisioneiro',source,false)
         vRP.setUData(parseInt(user_id),"vRP:prisao", -1)
@@ -151,12 +111,7 @@ function reducePrison(source, time)
         local x,y,z = table.unpack(Config.coords_prison['Solto'])
         SetEntityCoords(ped,x,y,z)
     else
-        vRP.setUData(parseInt(user_id), "vRP:prisao", json.encode(parseInt(tempo) - time))
-        if Config.base == "creative" then
-            execute("vRP/rem_prison",{ user_id = parseInt(user_id), prison = time })
-        elseif Config.base == "summerz" then
-            vRP.updatePrison(user_id)
-        end
+        vRP.UpdatePrison(user_id)
         TriggerClientEvent('prisioneiro',source,true)
         Config.notification(source,'Rest_prison',tempo)
     end
@@ -165,95 +120,60 @@ end
 
 function checkUserCnh(user_id)
 	local habilitacion = "NÃO POSSUI"
-	if hasPermission(user_id,"carteiraAB.permissao") then
-		habilitacion = "AB"
-	elseif hasPermission(user_id,"carteiraA.permissao") then
-		habilitacion = "A"
-	elseif hasPermission(user_id,"carteiraB.permissao") then
-		habilitacion = "B"
-	end
 	return habilitacion
 end
 
 function getFullName(user_id)
 	local identity = getUserIdentity(user_id)
 	if identity and identity.name then
-		if Config.base == "creative" or Config.base == "summerz" then
-			return identity.name.." "..identity.name2
-		elseif Config.base == "vrpex" then
-			return identity.name.." "..identity.firstname
-		end
+		return identity.name.." "..identity.name2
 	end
 	return "Não identificado"
 end
 
 function getSpecificPerm(perm)
-	local users = {}
-	if Config.base == "vrpex" then
-        users = query("vRP/getAllUsers", { set = perm })
-	elseif Config.base == "creative" or Config.base == "summerz" then
-		--users = query("vRP/get_specific_perm",{ permiss = perm })
-        users = vRP.numPermission(perm)
-	end
+	local users = vRP.NumPermission(perm)
 	return users
 end
 
 function prepare(name, query)
-    vRP.prepare(name, query)
+    vRP.Prepare(name, query)
 end
 
 function query(name, data)
-    return vRP.query(name, data)
+    return vRP.Query(name, data)
 end
 
 function execute(name, data)
-    vRP.execute(name, data)
+    vRP.Query(name, data)
 end
 
 RegisterCommand("outprison", function(source, args)
     local user_id = getUserId(source)
-    if user_id and args[1] then
+    if user_id and vRP.HasGroup(user_id,"Admin") and args[1] then
         local nuser_id = parseInt(args[1])
         local nplayer = getUserSource(nuser_id)
         local ped = GetPlayerPed(nplayer)
         local x,y,z = table.unpack(Config.coords_prison['Solto'])
         TriggerClientEvent('prisioneiro',nplayer,false)
         SetEntityCoords(ped,x,y,z)
-        vRP.setUData(parseInt(nuser_id),"vRP:prisao",-1)
     end
 end)
 
-if Config.base == "summerz" then
-    AddEventHandler("playerConnect",function(user_id,source)
-        Citizen.Wait(3000)
-        if source then
-            local value = vRP.userIdentity(user_id).prison
-            local tempo = parseInt(value) or 0
-            if tempo > 0 then
-                local ped = GetPlayerPed(source)
-                local x,y,z = table.unpack(Config.coords_prison['Preso'])
-                SetEntityCoords(ped,x,y,z)
-                TriggerEvent("will_ficha_v3:reducePrison",source)
-                playerSpawn(source, tempo)
-            end
+AddEventHandler("Connect",function(user_id,source)
+    Citizen.Wait(3000)
+    if source then
+        local value = vRP.Identity(user_id).prison
+        local tempo = parseInt(value) or 0
+        if tempo > 0 then
+            local ped = GetPlayerPed(source)
+            local x,y,z = table.unpack(Config.coords_prison['Preso'])
+            SetEntityCoords(ped,x,y,z)
+            TriggerEvent("will_ficha_v3:reducePrison",source)
+            playerSpawn(source, tempo)
         end
-    end)
-else
-    AddEventHandler("vRP:playerSpawn",function(user_id,source)
-        Citizen.Wait(3000)
-        if source then
-            local value = vRP.getUData(parseInt(user_id),"vRP:prisao") or vRP.getInformation(user_id)[1].prison
-            local tempo = parseInt(json.decode(value)) or 0
-            if tempo > 0 then
-                local ped = GetPlayerPed(source)
-                local x,y,z = table.unpack(Config.coords_prison['Preso'])
-                SetEntityCoords(ped,x,y,z)
-                TriggerEvent("will_ficha_v3:reducePrison",source)
-                playerSpawn(source, tempo)
-            end
-        end
-    end)
-end
+    end
+end)
 
 function SendDiscord(webhook, text, text2)
 	local avatar = 'https://cdn.discordapp.com/attachments/796797155100327976/875550178264903730/unknown.png'
@@ -366,15 +286,15 @@ CreateThread(function()
     prepare("ficha/remove_arrest", "DELETE FROM will_ficha WHERE id = @id")
     prepare("ficha/get_vehicle_by_plate","SELECT user_id, vehicle, plate FROM "..Config.vehicle_db.." WHERE plate = @plate")
     
-    prepare("ficha/get_vehicles","SELECT * FROM "..Config.vehicle_db.." WHERE user_id = @user_id")
+    prepare("ficha/get_vehicles","SELECT * FROM "..Config.vehicle_db.." WHERE Passport = @user_id")
     prepare("vRP/add_group","INSERT INTO vrp_permissions(user_id,permiss) VALUES(@user_id,@permiss)")
     prepare("vRP/del_group","DELETE FROM vrp_permissions WHERE user_id = @user_id AND permiss = @permiss")
     prepare("vRP/get_specific_perm","SELECT * FROM vrp_permissions WHERE permiss = @permiss")
     prepare("vRP/getAllUsers","SELECT * FROM vrp_user_data WHERE dvalue LIKE CONCAT('%', @set, '%')")
 
     if Config.base == "summerz" then
-        prepare("ficha/insert_porte","ALTER TABLE `summerz_characters` ADD COLUMN IF NOT EXISTS porte VARCHAR(254) DEFAULT 'INAPTO' COLLATE 'latin1_swedish_ci';")
-        prepare("ficha/update_porte","UPDATE summerz_characters SET porte = @porte WHERE id = @user_id")
+        prepare("ficha/insert_porte","ALTER TABLE `characters` ADD COLUMN IF NOT EXISTS porte VARCHAR(254) DEFAULT 'INAPTO' COLLATE 'latin1_swedish_ci';")
+        prepare("ficha/update_porte","UPDATE characters SET porte = @porte WHERE id = @user_id")
     elseif Config.base == "creative" then
         prepare("ficha/insert_porte","ALTER TABLE `vrp_users` ADD COLUMN IF NOT EXISTS porte VARCHAR(254) DEFAULT 'INAPTO' COLLATE 'latin1_swedish_ci';")
         prepare("ficha/update_porte","UPDATE vrp_users SET porte = @porte WHERE id = @user_id")

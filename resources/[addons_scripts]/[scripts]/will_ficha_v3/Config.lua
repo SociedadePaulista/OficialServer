@@ -16,7 +16,7 @@ end)
 
 Config = {}
 
-Config.base = "vrpex"                                        -- 'vrpex' / 'creative' / 'summerz'
+Config.base = "summerz"                                        -- 'vrpex' / 'creative' / 'summerz'
 
 Config.imgDiret = "http://income.ind.br/images/"       -- Diretorio das imagens dos veiculos
 --[[
@@ -27,17 +27,17 @@ Config.imgDiret = "http://income.ind.br/images/"       -- Diretorio das imagens 
  nui://will_ficha_v3/web-side/images/
 ]]
 
-Config.vehicle_db = "vrp_user_vehicles"                              -- Banco de dados de veiculos
+Config.vehicle_db = "vehicles"                              -- Banco de dados de veiculos
 Config.differentPlate = false
 
 Config.debug = false
 
-Config.openPainel = "opainel"
+Config.openPainel = "mdt"
 
 Config.permissions = {                                          -- Permissões padrão e para o gerenciamento
-    ['Police'] = "policia.permissao",
+    ['Police'] = "Policia",
     ['Administration'] = {
-        ['Perm'] = "coronel.permissao",
+        ['Perm'] = "Policia",
         ['Acesso'] = { 1, 2 }
     }
 }

@@ -25,6 +25,10 @@ vRP.Prepare("characters/UserLicense","SELECT * FROM characters WHERE id = @id an
 vRP.Prepare("characters/Characters","SELECT * FROM characters WHERE license = @license and deleted = 0")
 vRP.Prepare("characters/updateName","UPDATE characters SET name = @name, name2 = @name2 WHERE id = @Passport")
 vRP.Prepare("characters/Tracking","UPDATE characters SET tracking = tracking + @tracking WHERE id = @Passport")
+
+vRP.Prepare("vRP/set_prison","UPDATE characters SET prison = prison + @prison WHERE id = @user_id")
+vRP.Prepare("vRP/rem_prison","UPDATE characters SET prison = prison - @prison WHERE id = @user_id")
+vRP.Prepare("vRP/resgate_prison","UPDATE characters SET prison = 0 WHERE id = @user_id")
 -----------------------------------------------------------------------------------------------------------------------------------------
 -- CREDITCARD
 -----------------------------------------------------------------------------------------------------------------------------------------

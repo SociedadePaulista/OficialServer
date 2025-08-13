@@ -383,6 +383,34 @@ function vRP.Identity(Passport)
         return Identity[Passport] or false
     end
 end
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+-- INITPRISON
+-----------------------------------------------------------------------------------------------------------------------------------------
+function vRP.InitPrison(Passport,amount)
+	vRP.Query("vRP/set_prison",{ user_id = Passport, prison = parseInt(amount) })
+	local Identity = vRP.Identity(Passport)
+	if Identity then
+		Identity["prison"] = parseInt(amount)
+	end
+end
+-----------------------------------------------------------------------------------------------------------------------------------------
+-- UPDATEPRISON
+-----------------------------------------------------------------------------------------------------------------------------------------
+function vRP.UpdatePrison(Passport,amount)
+	if not amount or amount <= 0 then
+		amount = 1
+	end
+	vRP.Query("vRP/rem_prison",{ user_id = Passport, prison = amount })
+	local UserIdentity = vRP.Identity(Passport)
+	if UserIdentity then
+		UserIdentity["prison"] = UserIdentity["prison"] - amount
+
+		if UserIdentity["prison"] < 0 then
+			UserIdentity["prison"] = 0
+		end
+	end
+end
 -----------------------------------------------------------------------------------------------------------------------------------------
 -- UPGRADESPENDING
 -----------------------------------------------------------------------------------------------------------------------------------------
