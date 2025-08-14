@@ -260,8 +260,8 @@ RegisterNUICallback("UseButton", function(data)
 						local pickupCoords = (strCoords + strVecForward * 0.3)
 						if GetDistanceBetweenCoords(pedCoords, pickupCoords, true) <= 2.0 then
 
-							local closestPlayer, closestPlayerDist = GetClosestPlayerFunction()
-							if closestPlayer ~= nil and closestPlayerDist <= 1.5 then
+							local closestPlayer = GetClosestPlayerFunction()
+							if closestPlayer ~= nil then
 								if IsEntityPlayingAnim(GetPlayerPed(closestPlayer), 'anim@heists@box_carry@', 'idle', 3) then
 									SendNotify(18)
 									return
@@ -310,9 +310,8 @@ RegisterNUICallback("UseButton", function(data)
 			local ped = GetPlayerPed(-1)
 			local closestPlayer, closestDistance = GetClosestPlayerFunction()
 			local closestObject = GetClosestObjectOfType(GetEntityCoords(ped), 3.0, GetHashKey("prop_ld_binbag_01"), false)
-
     		if closestPlayer ~= -1 and closestDistance < 3.0 then
-				if IsEntityPlayingAnim(GetPlayerPed(closestPlayer), "anim@gangops@morgue@table@", "body_search", 3) then
+				if closestPlayer == StretcherData.puton then
 					TriggerServerEvent('brutal_ambulancejob:server:putonBED', closestPlayer)
 					StretcherData.puton = nil
 					DetachEntity(closestObject, true, true)
@@ -328,8 +327,8 @@ RegisterNUICallback("UseButton", function(data)
 			local closestPlayer, closestDistance = GetClosestPlayerFunction()
 			local playerCoords = GetEntityCoords(PlayerPedId())
 			local closestObject = GetClosestObjectOfType(playerCoords, 3.0, GetHashKey("prop_ld_binbag_01"), false)
-
-			if GetDistanceBetweenCoords(GetEntityCoords(GetPlayerPed(closestPlayer)), GetEntityCoords(closestObject), true) <= 2.5 then
+			local distance = #(GetEntityCoords(GetPlayerPed(closestPlayer)-GetEntityCoords(closestObject)))
+			if distance <= 2.5 then
 				NetworkRegisterEntityAsNetworked(closestObject)
 				NetworkRequestControlOfEntity(closestObject)
 				SetEntityAsMissionEntity(closestObject)

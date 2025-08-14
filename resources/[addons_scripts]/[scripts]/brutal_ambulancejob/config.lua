@@ -224,7 +224,7 @@ Config = {
             Use = true,
             Command = 'bed', 
             Suggestion = 'To use the closest Bed',
-            Objects = {'v_med_bed2', 'v_med_bed1', 'v_med_emptybed', -1519439119, -289946279}
+            Objects = {'v_med_bed2', 'v_med_bed1', 'v_med_emptybed', -1519439119, -289946279, -1963803813}
         }
     },
 

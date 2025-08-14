@@ -298,6 +298,14 @@ AddEventHandler("brutal_ambulancejob:server:puton", function(Target)
     TriggerClientEvent('brutal_ambulancejob:client:puton', Target, source)
 end)
 
+RegisterNetEvent('brutal_ambulancejob:server:remove_puton', function(targetId)
+    if targetId and targetId ~= 0 then
+        TriggerClientEvent('brutal_ambulancejob:client:stopLieDownAnim', targetId)
+    end
+end)
+
+
+
 RegisterNetEvent("brutal_ambulancejob:server:putonBED")
 AddEventHandler("brutal_ambulancejob:server:putonBED", function(Target)
     TriggerClientEvent('brutal_ambulancejob:client:putonBED', Target)

@@ -24,7 +24,11 @@ function GetClosestPlayerFunction()
 end
 
 function GetClosestVehicleFunction(coords, modelFilter)
-    return vRP.ClosestVehicle(5)
+    local vehicle = vRP.ClosestVehicle(5)
+    if vehicle then
+        return vehicle, 4.0
+    end
+    return -1
 end
 
 
